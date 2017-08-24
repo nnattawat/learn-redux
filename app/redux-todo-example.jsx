@@ -7,7 +7,7 @@ let todoId = 1;
 //   showCompleted: false,
 //   todos: []
 // };
-// 
+//
 // let reducer = (state = defaultState, action) => {
 //   switch (action.type) {
 //     case 'CHANGE_SEARCH_TEXT':
@@ -39,6 +39,8 @@ let todoId = 1;
 //   }
 // };
 
+
+// searchText reducer and action generators
 let searchTextReducer = (state = '', action) => {
   switch (action.type) {
     case 'CHANGE_SEARCH_TEXT':
@@ -49,6 +51,14 @@ let searchTextReducer = (state = '', action) => {
   }
 };
 
+let changeSearchText = (searchText) => {
+  return {
+    type: 'CHANGE_SEARCH_TEXT',
+    searchText
+  }
+};
+
+// todos reducer and action generators
 let todosReducer = (state = [], action) => {
   switch (action.type) {
     case 'ADD_TODO':
@@ -65,6 +75,20 @@ let todosReducer = (state = [], action) => {
       break;
     default:
       return state;
+  }
+};
+
+let addTodo = (title) => {
+  return {
+    type: 'ADD_TODO',
+    title
+  }
+};
+
+let removeTodo = (id) => {
+  return {
+    type: 'REMOVE_TODO',
+    id: id
   }
 };
 
@@ -85,31 +109,15 @@ let unsubscribe = store.subscribe(() => {
 });
 
 console.log('init state:', store.getState());
-store.dispatch({
-  type: 'CHANGE_SEARCH_TEXT',
-  searchText: 'search 1'
-});
+store.dispatch(changeSearchText('search 1'));
 
 // You can unsubscribe to future changes
 // unsubscribe();
 
-store.dispatch({
-  type: 'CHANGE_SEARCH_TEXT',
-  searchText: 'search 2'
-});
+store.dispatch(changeSearchText('search 2'));
 
-store.dispatch({
-  type: 'ADD_TODO',
-  title: 'Todo 1'
-});
+store.dispatch(addTodo('Todo 1'));
 
-store.dispatch({
-  type: 'ADD_TODO',
-  title: 'Todo 2'
-});
+store.dispatch(addTodo('Todo 2'));
 
-
-store.dispatch({
-  type: 'REMOVE_TODO',
-  id: 1
-});
+store.dispatch(removeTodo(1));
