@@ -1,43 +1,78 @@
 let redux = require('redux');
 
-let defaultState = {
-  searchText: '',
-  showCompleted: false,
-  todos: []
-};
-
 let todoId = 1;
 
-let reducer = (state = defaultState, action) => {
+// let defaultState = {
+//   searchText: '',
+//   showCompleted: false,
+//   todos: []
+// };
+// 
+// let reducer = (state = defaultState, action) => {
+//   switch (action.type) {
+//     case 'CHANGE_SEARCH_TEXT':
+//       return {
+//         ...state,
+//         searchText: action.searchText
+//       }
+//       break;
+//     case 'ADD_TODO':
+//       return {
+//         ...state,
+//         todos: [
+//           ...state.todos,
+//           {
+//             id: todoId++,
+//             title: action.title
+//           }
+//         ]
+//       }
+//       break;
+//     case 'REMOVE_TODO':
+//       return {
+//         ...state,
+//         todos: state.todos.filter(todo => todo.id !== action.id)
+//       }
+//       break;
+//     default:
+//       return state;
+//   }
+// };
+
+let searchTextReducer = (state = '', action) => {
   switch (action.type) {
     case 'CHANGE_SEARCH_TEXT':
-      return {
-        ...state,
-        searchText: action.searchText
-      }
-      break;
-    case 'ADD_TODO':
-      return {
-        ...state,
-        todos: [
-          ...state.todos,
-          {
-            id: todoId++,
-            title: action.title
-          }
-        ]
-      }
-      break;
-    case 'REMOVE_TODO':
-      return {
-        ...state,
-        todos: state.todos.filter(todo => todo.id !== action.id)
-      }
+      return action.searchText
       break;
     default:
       return state;
   }
 };
+
+let todosReducer = (state = [], action) => {
+  switch (action.type) {
+    case 'ADD_TODO':
+      return [
+        ...state,
+        {
+          id: todoId++,
+          title: action.title
+        }
+      ];
+      break;
+    case 'REMOVE_TODO':
+      return state.filter(todo => todo.id !== action.id);
+      break;
+    default:
+      return state;
+  }
+};
+
+// Simplify reducer using combine reducers
+let reducer = redux.combineReducers({
+  searchText: searchTextReducer,
+  todos: todosReducer
+});
 
 let store = redux.createStore(reducer, redux.compose(
   window.devToolsExtension ? window.devToolsExtension() : f => f
