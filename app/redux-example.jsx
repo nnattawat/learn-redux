@@ -10,4 +10,13 @@ console.log('Start redux example')
 let add = (a, b) => a + b;
 console.log(add(1, 2));
 
-// Function in redux have to be pure function
+// define reducer with default state
+let reducer = (state = { name: 'Anonymous' }, action) => {
+  return state;
+};
+
+// Function in createStore has to be pure function
+let store = redux.createStore(reducer);
+
+let currentState = store.getState();
+console.log(currentState);
