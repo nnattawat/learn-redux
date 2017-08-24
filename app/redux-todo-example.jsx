@@ -6,6 +6,8 @@ let defaultState = {
   todos: []
 };
 
+let todoId = 1;
+
 let reducer = (state = defaultState, action) => {
   switch (action.type) {
     case 'CHANGE_SEARCH_TEXT':
@@ -14,21 +16,65 @@ let reducer = (state = defaultState, action) => {
         searchText: action.searchText
       }
       break;
+    case 'ADD_TODO':
+      return {
+        ...state,
+        todos: [
+          ...state.todos,
+          {
+            id: todoId++,
+            title: action.title
+          }
+        ]
+      }
+      break;
+    case 'REMOVE_TODO':
+      return {
+        ...state,
+        todos: state.todos.filter(todo => todo.id !== action.id)
+      }
+      break;
     default:
       return state;
   }
 };
 
-let store = redux.createStore(reducer);
+let store = redux.createStore(reducer, redux.compose(
+  window.devToolsExtension ? window.devToolsExtension() : f => f
+));
 
-console.log(`init state:`);
-console.log(store.getState());
+// Subscribe to changes
+let unsubscribe = store.subscribe(() => {
+  let state = store.getState();
+  console.log('state has changed to:', state);
+});
 
-let action = {
+console.log('init state:', store.getState());
+store.dispatch({
   type: 'CHANGE_SEARCH_TEXT',
-  searchText: 'todo'
-}
-store.dispatch(action);
+  searchText: 'search 1'
+});
 
-console.log(`state after dispatch CHANGE_SEARCH_TEXT:`);
-console.log(store.getState());
+// You can unsubscribe to future changes
+// unsubscribe();
+
+store.dispatch({
+  type: 'CHANGE_SEARCH_TEXT',
+  searchText: 'search 2'
+});
+
+store.dispatch({
+  type: 'ADD_TODO',
+  title: 'Todo 1'
+});
+
+store.dispatch({
+  type: 'ADD_TODO',
+  title: 'Todo 2'
+});
+
+
+store.dispatch({
+  type: 'REMOVE_TODO',
+  id: 1
+});
