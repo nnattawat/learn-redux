@@ -123,4 +123,6 @@ store.dispatch(actions.addTodo('Todo 1'));
 
 store.dispatch(actions.addTodo('Todo 2'));
 
-store.dispatch(actions.removeTodo(1));
+// store.dispatch(actions.removeTodo(1));
+store.dispatch(store.dispatch(actions.addTodo('Todo 3')));
+store.dispatch(store.dispatch(actions.removeTodo(1)));
